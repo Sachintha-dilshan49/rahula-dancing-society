@@ -1,0 +1,22 @@
+# Ignore all node modules everywhere
+node_modules/
+**/node_modules/
+
+# Ignore Next build files
+.next/
+**/.next/
+
+# Ignore env files
+.env
+**/.env
+
+# Ignore build output
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
