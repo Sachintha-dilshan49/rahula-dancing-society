@@ -9,20 +9,19 @@ export default function Hero() {
 
       {/* Background Image */}
       <Image
-        src="/images/hero/new-hero-bg.jpg"   // 🔁 Change image name if needed
+        src="/images/hero/new-hero-bg.jpg"
         alt="Rahula College Dancing Society"
         fill
         priority
-        className="object-cover object-center"
+        className="object-cover object-center blur-[2px] scale-105"
       />
 
-      {/* Blue Overlay (adjust opacity if needed) */}
-      <div className="absolute inset-0 bg-[var(--rahula-blue)]/60" />
+      {/* Blue Overlay */}
+      <div className="absolute inset-0 bg-[var(--rahula-blue)]/80" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl">
         
-        {/* Title */}
         <h1 className="font-bold leading-tight">
           <span className="block text-4xl md:text-6xl">
             Rahula College
@@ -32,12 +31,10 @@ export default function Hero() {
           </span>
         </h1>
 
-        {/* Subtitle */}
         <p className="mt-6 text-lg md:text-xl text-gray-200">
           Preserving tradition. Inspiring excellence.
         </p>
 
-        {/* Buttons */}
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
 
           <Link
