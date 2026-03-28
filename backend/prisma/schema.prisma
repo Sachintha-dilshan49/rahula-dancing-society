@@ -18,8 +18,73 @@ model User {
   otpExpiresAt DateTime?
 }
 
+model Student {
+  id            String   @id @default(uuid())
+  name          String
+  grade         Int
+  email         String?
+  phone         String?
+  parentContact String?
+  notes         String?
+
+  marks         Mark[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Mark {
+  id            String   @id @default(uuid())
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  grade         Int
+  term          Int
+  practicalMark Float?
+  paperMark     Float?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([studentId, grade, term])
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  title       String
+  placement   String
+  subtitle    String?
+  year        Int
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model GalleryItem {
+  id        String          @id @default(uuid())
+  title     String
+  mediaType MediaType
+  category  GalleryCategory
+  url       String
+  date      DateTime        @default(now())
+  views     Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
 enum Role {
   ADMIN
   TEACHER
   STUDENT
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO
+}
+
+enum GalleryCategory {
+  PERFORMANCES
+  REHEARSALS
+  AWARDS
+  CULTURAL_EVENTS
 }

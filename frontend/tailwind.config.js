@@ -6,7 +6,15 @@ module.exports = {
     "./src/shared/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        rahula: {
+          blue: "#0A2E73",
+          gold: "#D4AF37",
+          dark: "#0F172A",
+        }
+      }
+    },
   },
   plugins: [],
 }

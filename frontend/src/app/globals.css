@@ -41,28 +41,28 @@ body {
   margin-bottom:25px;
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  margin-bottom:15px;
-  border-radius:8px;
-  border:1px solid #ddd;
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
-button{
-  width:100%;
-  padding:12px;
-  background:#143a7b;
-  color:white;
-  border:none;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  background: #143a7b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-button:hover{
-  background:#0f2e63;
+.login-container button:hover {
+  background: #0f2e63;
 }
 
 .forgot{
