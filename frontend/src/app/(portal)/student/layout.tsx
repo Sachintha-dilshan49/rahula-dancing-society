@@ -1,34 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { Sidebar } from '@/shared/components/Sidebar';
-import { Header } from '@/shared/components/Header';
+import { StudentSidebar } from '@/shared/components/StudentSidebar';
+import { StudentHeader } from '@/shared/components/StudentHeader';
 
-export default function PortalLayout({
+export default function StudentPortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  // Student routes have their own layout with StudentSidebar/StudentHeader
-  const isStudentRoute = pathname.startsWith('/student');
-  
-  if (isStudentRoute) {
-    return <>{children}</>;
-  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex font-sans overflow-x-hidden">
       {/* Sidebar - fixed on the left */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <StudentSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Content Wrapper - offset by Sidebar width (256px/w-64) */}
       <div className="md:ml-64 flex-1 flex flex-col min-w-0">
         {/* Sticky Header */}
-        <Header onMenuClick={() => setIsSidebarOpen(true)} />
+        <StudentHeader onMenuClick={() => setIsSidebarOpen(true)} />
         
         {/* Main Content Scrollable Area */}
         <main className="flex-1 p-4 md:p-8 overflow-y-auto">

@@ -4,19 +4,32 @@ import { useState, useRef, useEffect } from 'react';
 import { Menu, Bell, LogOut, Key, ChevronDown } from 'lucide-react';
 import { ChangePasswordModal } from './ChangePasswordModal';
 import { useRouter } from 'next/navigation';
+import { authService } from '@/services/auth.service';
+import { studentPortalService } from '@/services/student-portal.service';
 
-interface HeaderProps {
+interface StudentHeaderProps {
   onMenuClick?: () => void;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function StudentHeader({ onMenuClick }: StudentHeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [studentName, setStudentName] = useState('Student');
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    studentPortalService.getMyProfile()
+      .then((data) => {
+        if (data.studentProfile) {
+          setStudentName(data.studentProfile.name);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    authService.removeToken();
     router.push('/login');
   };
 
@@ -30,6 +43,8 @@ export function Header({ onMenuClick }: HeaderProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const initials = studentName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
     <>
@@ -45,7 +60,11 @@ export function Header({ onMenuClick }: HeaderProps) {
           
           <div className="hidden sm:block">
             <p className="text-sm font-medium text-slate-500">Welcome back,</p>
-            <h2 className="text-xl font-bold text-rahula-blue tracking-tight">Portal User</h2>
+            <h2 className="text-xl font-bold text-rahula-blue tracking-tight">{studentName}</h2>
+          </div>
+          
+          <div className="sm:hidden">
+            <h2 className="text-lg font-bold text-rahula-blue tracking-tight truncate max-w-[150px]">{studentName}</h2>
           </div>
         </div>
 
@@ -53,7 +72,6 @@ export function Header({ onMenuClick }: HeaderProps) {
         <div className="flex items-center space-x-6">
           <button className="relative p-2.5 text-slate-400 hover:bg-slate-50 hover:text-rahula-blue rounded-xl transition-all duration-200">
             <Bell size={20} />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
           
           <div className="h-8 w-[1px] bg-slate-200"></div>
@@ -63,8 +81,8 @@ export function Header({ onMenuClick }: HeaderProps) {
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               className={`flex items-center space-x-3 p-1.5 pr-3 rounded-xl transition-all duration-200 ${isUserMenuOpen ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
             >
-              <div className="w-9 h-9 rounded-lg bg-rahula-blue text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-rahula-blue/20">
-                U
+              <div className="w-9 h-9 rounded-lg bg-rahula-blue text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-blue-900/20">
+                {initials}
               </div>
               <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -73,7 +91,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             {isUserMenuOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 animate-in slide-in-from-top-2 duration-200 z-50">
                 <div className="px-4 py-2 border-b border-slate-50 mb-1">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Account Details</p>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Account</p>
                 </div>
                 
                 <button 
@@ -109,4 +127,3 @@ export function Header({ onMenuClick }: HeaderProps) {
     </>
   );
 }
-

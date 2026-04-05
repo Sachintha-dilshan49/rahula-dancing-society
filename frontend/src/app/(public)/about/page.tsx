@@ -58,18 +58,18 @@ export default function AboutPage() {
     <div className="bg-[#f4f6fb] min-h-screen">
 
       {/* Hero Banner */}
-      <section className="bg-[#f4f6fb] py-16 text-center">
-        <h1 className="text-5xl font-extrabold text-rahula-blue mb-4">About Us</h1>
-        <p className="text-slate-500 text-lg">Our journey, mission, and dedication to excellence</p>
+      <section className="bg-[#f4f6fb] py-12 md:py-16 text-center px-6">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-rahula-blue mb-4">About Us</h1>
+        <p className="text-slate-500 text-base md:text-lg">Our journey, mission, and dedication to excellence</p>
       </section>
 
       {/* Our Story */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
             {/* Image */}
-            <div className="w-full lg:w-[420px] shrink-0">
-              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+            <div className="w-full md:w-[420px] shrink-0">
+              <div className="relative w-full aspect-[16/10] md:aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
                 <Image
                   src="/images/about-story.jpg"
                   alt="Rahula Dancing Society Performance"
@@ -89,9 +89,9 @@ export default function AboutPage() {
             </div>
 
             {/* Text */}
-            <div className="flex-1">
-              <h2 className="text-3xl font-extrabold text-rahula-blue mb-5">Our Story</h2>
-              <div className="space-y-4 text-slate-600 leading-relaxed">
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-rahula-blue mb-5">Our Story</h2>
+              <div className="space-y-4 text-slate-600 leading-relaxed text-sm md:text-base">
                 <p>
                   Founded in 2001, the Rahula College Dancing Society began with a vision to preserve
                   and promote traditional Sri Lankan dance forms among the youth of Matara. What started

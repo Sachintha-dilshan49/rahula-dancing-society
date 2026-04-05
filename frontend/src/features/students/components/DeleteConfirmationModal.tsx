@@ -25,7 +25,7 @@ export function DeleteConfirmationModal({ isOpen, onClose, onSuccess, student }:
       await studentService.deleteStudent(student.id);
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'An error occurred while deleting the student.');
     } finally {
       setIsDeleting(false);

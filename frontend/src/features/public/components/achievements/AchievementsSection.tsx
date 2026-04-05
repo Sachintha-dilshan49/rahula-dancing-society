@@ -35,25 +35,27 @@ export default function AchievementsSection() {
   return (
     <div className="bg-[#f4f6fb] min-h-screen">
       {/* Page Banner */}
-      <section className="bg-[#f4f6fb] py-16 text-center">
-        <h1 className="text-5xl font-extrabold text-rahula-blue mb-4">Our Achievements</h1>
-        <p className="text-slate-500 text-lg">Excellence in traditional Sri Lankan dance</p>
+      <section className="bg-[#f4f6fb] py-12 md:py-16 text-center px-4">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-rahula-blue mb-4 leading-tight">
+          Our Achievements
+        </h1>
+        <p className="text-slate-500 text-base md:text-lg">Excellence in traditional Sri Lankan dance</p>
       </section>
 
       <section className="pb-20 bg-[#f4f6fb]">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-4 md:px-6">
 
         {/* Stats row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           {[
             { label: 'Total Awards', val: totalAwards > 0 ? `${totalAwards}+` : '150+' },
             { label: 'Gold Medals', val: goldMedals > 0 ? goldMedals : 45 },
             { label: 'National Titles', val: nationalTitles > 0 ? nationalTitles : 12 },
             { label: 'International', val: international > 0 ? international : 8 },
           ].map(stat => (
-            <div key={stat.label} className="bg-white rounded-2xl px-6 py-8 text-center shadow-sm border border-slate-100">
-              <div className="text-4xl font-extrabold text-rahula-blue">{stat.val}</div>
-              <div className="text-sm text-slate-500 mt-1 font-medium">{stat.label}</div>
+            <div key={stat.label} className="bg-white rounded-2xl px-4 py-6 md:px-6 md:py-8 text-center shadow-sm border border-slate-100">
+              <div className="text-2xl md:text-4xl font-extrabold text-rahula-blue">{stat.val}</div>
+              <div className="text-xs md:text-sm text-slate-500 mt-1 font-medium">{stat.label}</div>
             </div>
           ))}
         </div>

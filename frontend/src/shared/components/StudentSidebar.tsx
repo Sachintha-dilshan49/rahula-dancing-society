@@ -1,38 +1,37 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
-  Users, 
   FileText, 
-  Image as ImageIcon, 
-  Trophy, 
+  User, 
   LogOut,
-  Music,
-  BookMarked,
-  Megaphone,
-  MessageSquare
+  GraduationCap,
+  BookMarked
 } from 'lucide-react';
+import { authService } from '@/services/auth.service';
 
 const navItems = [
-  { name: 'Dashboard', href: '/teacher/dashboard', icon: LayoutDashboard },
-  { name: 'Students', href: '/teacher/students', icon: Users },
-  { name: 'Marks', href: '/teacher/marks', icon: FileText },
-  { name: 'Gallery', href: '/teacher/gallery', icon: ImageIcon },
-  { name: 'Achievements', href: '/teacher/achievements', icon: Trophy },
-  { name: 'Past Papers', href: '/teacher/pastpapers', icon: BookMarked },
-  { name: 'Announcements', href: '/teacher/announcements', icon: Megaphone },
-  { name: 'Notes', href: '/teacher/notes', icon: MessageSquare },
+  { name: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
+  { name: 'My Marks', href: '/student/marks', icon: FileText },
+  { name: 'Past Papers', href: '/student/pastpapers', icon: BookMarked },
+  { name: 'My Profile', href: '/student/profile', icon: User },
 ];
 
-interface SidebarProps {
+interface StudentSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function StudentSidebar({ isOpen, onClose }: StudentSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    authService.removeToken();
+    router.push('/login');
+  };
 
   return (
     <>
@@ -50,11 +49,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Logo Area */}
       <div className="h-20 flex items-center px-6 border-b border-slate-100">
         <div className="w-10 h-10 bg-rahula-blue rounded-xl flex items-center justify-center text-white mr-3 shadow-md shadow-blue-900/20">
-          <Music size={20} />
+          <GraduationCap size={20} />
         </div>
         <div>
           <h1 className="font-bold text-rahula-blue text-lg leading-tight">Rahula Dance</h1>
-          <p className="text-xs text-slate-500 font-medium tracking-wide">Teacher Portal</p>
+          <p className="text-xs text-slate-500 font-medium tracking-wide">Student Portal</p>
         </div>
       </div>
 
@@ -68,9 +67,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group relative ${
                 isActive 
-                  ? 'bg-blue-50/50 text-rahula-blue' 
+                  ? 'bg-blue-50/60 text-rahula-blue' 
                   : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
@@ -88,7 +87,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Logout */}
       <div className="p-4 border-t border-slate-100">
-        <button className="flex items-center space-x-3 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-lg transition-colors group">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center space-x-3 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-lg transition-colors group"
+        >
           <LogOut size={20} className="text-red-400 group-hover:text-red-500" />
           <span className="font-medium text-sm">Logout</span>
         </button>

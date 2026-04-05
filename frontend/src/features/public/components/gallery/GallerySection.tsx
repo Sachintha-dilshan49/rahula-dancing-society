@@ -42,13 +42,15 @@ export default function GallerySection() {
   return (
     <>
       {/* Page Banner */}
-      <section className="bg-[#f4f6fb] py-16 text-center">
-        <h1 className="text-5xl font-extrabold text-rahula-blue mb-4">Gallery</h1>
-        <p className="text-slate-500 text-lg">Moments captured from our journey</p>
+      <section className="bg-[#f4f6fb] py-12 md:py-16 text-center px-4">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-rahula-blue mb-4 leading-tight">
+          Gallery
+        </h1>
+        <p className="text-slate-500 text-base md:text-lg">Moments captured from our journey</p>
       </section>
 
       <section className="pb-20 bg-white">
-        <div className="max-w-6xl mx-auto px-6 pt-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10">
 
           {/* Filter pills */}
           <div className="flex items-center gap-3 mb-8 flex-wrap">

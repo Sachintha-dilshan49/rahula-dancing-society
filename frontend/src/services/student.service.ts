@@ -23,22 +23,23 @@ export const studentService = {
     return response.json();
   },
 
-  async createStudent(data: CreateStudentDTO): Promise<Student> {
+  async createStudent(data: CreateStudentDTO): Promise<{ student: Student }> {
     const response = await fetch(`${API_URL}/students`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
-      throw new Error('Failed to create student');
+      const error = await response.json();
+      throw new Error(error.message || "Failed to create student");
     }
-    
-    const result = await response.json();
-    return result.student;
+
+    return response.json();
   },
+
 
   async updateStudent(id: string, data: Partial<CreateStudentDTO>): Promise<Student> {
     const response = await fetch(`${API_URL}/students/${id}`, {

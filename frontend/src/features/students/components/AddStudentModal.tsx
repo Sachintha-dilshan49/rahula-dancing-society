@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Check, Mail } from 'lucide-react';
 import { studentService } from '@/services/student.service';
 
 interface AddStudentModalProps {
@@ -22,6 +22,7 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successData, setSuccessData] = useState<{ name: string; email: string } | null>(null);
 
   if (!isOpen) return null;
 
@@ -44,10 +45,10 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
         notes: formData.notes || null
       });
 
+      setSuccessData({ name: formData.name, email: formData.email });
       setFormData({ name: '', grade: '', email: '', phone: '', parentContact: '', notes: '' });
       onSuccess();
-      onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'An error occurred while creating the student.');
     } finally {
       setIsSubmitting(false);
@@ -60,6 +61,49 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
       [e.target.name]: e.target.value
     });
   };
+
+  if (successData) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 text-center animate-in zoom-in-95 duration-200">
+          <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Check size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Student Added!</h2>
+          <p className="text-slate-500 mb-6">
+            <span className="font-semibold text-slate-700">{successData.name}</span> has been successfully added to the society.
+          </p>
+
+          <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-6 text-left">
+            <div className="flex items-start space-x-3">
+              <div className="mt-0.5 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <Mail size={16} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-blue-800 mb-1">Login credentials sent by email</p>
+                <p className="text-xs text-blue-600 leading-relaxed">
+                  A welcome email with the login email and temporary password has been sent to{' '}
+                  <span className="font-bold">{successData.email}</span>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-400 mb-6">The student should check their inbox and change their password after the first login.</p>
+
+          <button 
+            onClick={() => {
+              setSuccessData(null);
+              onClose();
+            }}
+            className="w-full py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -118,7 +162,7 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Email Address</label>
+                <label className="text-sm font-semibold text-slate-700">Email Address *</label>
                 <input 
                   type="email" 
                   name="email"
@@ -126,8 +170,11 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
                   onChange={handleChange}
                   placeholder="student@example.com"
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rahula-blue/20 focus:border-rahula-blue bg-slate-50 transition-colors"
+                  required
                 />
+                <p className="text-[11px] text-slate-500">Student will use this email and a generated password to login.</p>
               </div>
+
 
               {/* Phone */}
               <div className="space-y-2">

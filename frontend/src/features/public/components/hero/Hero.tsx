@@ -23,15 +23,15 @@ export default function Hero() {
       <div className="relative z-10 text-center px-6 max-w-4xl">
         
         <h1 className="font-bold leading-tight">
-          <span className="block text-4xl md:text-6xl">
+          <span className="block text-3xl sm:text-4xl md:text-6xl">
             Rahula College
           </span>
-          <span className="block text-5xl md:text-7xl text-[var(--rahula-gold)]">
+          <span className="block text-4xl sm:text-5xl md:text-7xl text-[var(--rahula-gold)]">
             Dancing Society
           </span>
         </h1>
 
-        <p className="mt-6 text-lg md:text-xl text-gray-200">
+        <p className="mt-4 md:mt-6 text-base md:text-xl text-gray-200">
           Preserving tradition. Inspiring excellence.
         </p>
 

@@ -61,7 +61,7 @@ export function EditStudentModal({ isOpen, onClose, onSuccess, student }: EditSt
 
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'An error occurred while updating the student.');
     } finally {
       setIsSubmitting(false);

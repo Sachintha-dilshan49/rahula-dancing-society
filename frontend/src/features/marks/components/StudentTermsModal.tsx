@@ -20,6 +20,7 @@ export function StudentTermsModal({ isOpen, onClose, student, currentGrade }: St
     if (isOpen && student) {
       loadMarks();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, student]);
 
   const loadMarks = async () => {

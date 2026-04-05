@@ -3,18 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { authService } from "@/services/auth.service";
 
 export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setErrorMsg("");
     setLoading(true);
 
     try {
@@ -24,27 +26,31 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
 
-        localStorage.setItem("token", data.token);
+        authService.setToken(data.token);
 
-        alert("Login successful");
+        // Decode role and redirect accordingly
+        const role = authService.getRoleFromToken();
 
-        // redirect to dashboard
-        router.push("/dashboard");
+        if (role === "STUDENT") {
+          router.push("/student/dashboard");
+        } else {
+          router.push("/teacher/dashboard");
+        }
 
       } else {
-        alert(data.message);
+        setErrorMsg(data.message || 'Login failed. Please try again.');
       }
 
     } catch (error) {
       console.error(error);
-      alert("Server error");
+      setErrorMsg('Server error. Please try again.');
     }
 
     setLoading(false);
@@ -85,6 +91,12 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
           </div>
+
+          {errorMsg && (
+            <p style={{ color: '#dc2626', fontSize: '0.875rem', marginBottom: '0.75rem', padding: '0.75rem', background: '#fef2f2', borderRadius: '0.5rem', border: '1px solid #fecaca' }}>
+              {errorMsg}
+            </p>
+          )}
 
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login to Portal"}

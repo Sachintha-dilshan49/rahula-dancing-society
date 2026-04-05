@@ -47,7 +47,7 @@ function AchievementModal({
       else await achievementService.create(payload);
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message);
     } finally {
       setSubmitting(false);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Upload, Trash2, Play, Eye, Image as ImageIcon } from 'lucide-react';
+import { Search, Upload, Trash2, Play, Eye } from 'lucide-react';
 import { galleryService, GalleryItem, GalleryCategory } from '@/services/gallery.service';
 import Image from 'next/image';
 
@@ -48,7 +48,7 @@ function UploadModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; onClose:
       await galleryService.upload(file, title, category);
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message);
     } finally {
       setIsUploading(false);
@@ -207,7 +207,7 @@ export default function TeacherGalleryPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-20 text-center text-slate-400">
-          No media uploaded yet. Click "Upload Media" to add photos or videos.
+          No media uploaded yet. Click &quot;Upload Media&quot; to add photos or videos.
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

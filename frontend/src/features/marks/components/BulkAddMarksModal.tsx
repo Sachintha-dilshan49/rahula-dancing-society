@@ -74,7 +74,7 @@ export function BulkAddMarksModal({ isOpen, onClose, onSuccess, students, grade,
 
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'An error occurred while saving marks.');
     } finally {
       setIsSubmitting(false);
