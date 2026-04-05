@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../config/prisma";
 import { generateOtp } from "../utils/generateOtp";
 import { sendOtpEmail } from "../services/email.service";
+import { getStudentByUserId } from "../services/student.service";
 
 
 // ================= LOGIN =================
@@ -164,3 +165,83 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ================= CHANGE PASSWORD =================
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Old and new passwords are required" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid current password" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ================= GET CURRENT USER =================
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // If user is a student, include their student profile
+    let studentProfile = null;
+    if (user.role === "STUDENT") {
+      studentProfile = await getStudentByUserId(userId);
+    }
+
+    res.json({
+      user,
+      studentProfile
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -40,7 +40,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    await galleryService.deleteGalleryItem(req.params.id);
+    await galleryService.deleteGalleryItem(String(req.params.id));
     res.json({ message: 'Gallery item deleted' });
   } catch (e: any) {
     res.status(500).json({ message: e.message });
@@ -49,7 +49,7 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
 
 export const incrementViews = async (req: Request, res: Response): Promise<void> => {
   try {
-    const item = await galleryService.incrementViews(req.params.id);
+    const item = await galleryService.incrementViews(String(req.params.id));
     res.json({ item });
   } catch (e: any) {
     res.status(500).json({ message: e.message });

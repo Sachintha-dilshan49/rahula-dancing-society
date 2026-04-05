@@ -16,6 +16,7 @@ model User {
   updatedAt    DateTime  @updatedAt
   isActive     Boolean   @default(true)
   otpExpiresAt DateTime?
+  student      Student?
 }
 
 model Student {
@@ -26,8 +27,11 @@ model Student {
   phone         String?
   parentContact String?
   notes         String?
+  userId        String?  @unique
+  user          User?    @relation(fields: [userId], references: [id])
 
   marks         Mark[]
+  receivedNotes Note[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -71,6 +75,16 @@ model GalleryItem {
   updatedAt DateTime        @updatedAt
 }
 
+model PastPaper {
+  id          String   @id @default(uuid())
+  title       String
+  grade       Int
+  term        Int?
+  year        Int
+  fileUrl     String
+  uploadedAt  DateTime @default(now())
+}
+
 enum Role {
   ADMIN
   TEACHER
@@ -87,4 +101,23 @@ enum GalleryCategory {
   REHEARSALS
   AWARDS
   CULTURAL_EVENTS
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  grade       Int?     // If null, it's an overall announcement
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

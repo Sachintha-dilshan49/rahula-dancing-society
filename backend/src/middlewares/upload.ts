@@ -14,9 +14,9 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowed = /jpeg|jpg|png|gif|webp|mp4|mov/i;
+  const allowed = /jpeg|jpg|png|gif|webp|mp4|mov|pdf/i;
   const ok = allowed.test(path.extname(file.originalname)) && allowed.test(file.mimetype);
-  ok ? cb(null, true) : cb(new Error('Only images and video files are allowed'));
+  ok ? cb(null, true) : cb(new Error('Only images, video, and pdf files are allowed'));
 };
 
 export const upload = multer({ storage, fileFilter, limits: { fileSize: 50 * 1024 * 1024 } });

@@ -10,6 +10,9 @@ import studentRoutes from "./routes/student.routes";
 import markRoutes from "./routes/mark.routes";
 import achievementRoutes from "./routes/achievement.routes";
 import galleryRoutes from "./routes/gallery.routes";
+import pastpaperRoutes from "./routes/pastpaper.routes";
+import announcementRoutes from "./routes/announcement.routes";
+import noteRoutes from "./routes/note.routes";
 
 const app = express();
 
@@ -26,5 +29,8 @@ app.use("/api/students", studentRoutes);
 app.use("/api/marks", markRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/pastpapers", pastpaperRoutes);
+app.use("/api/announcements", announcementRoutes);
+app.use("/api/notes", noteRoutes);
 
 export default app;

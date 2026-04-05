@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as markService from "../services/mark.service";
+import { getStudentByUserId } from "../services/student.service";
 
 export const getMarksByGradeAndTerm = async (req: Request, res: Response) => {
   try {
@@ -49,6 +50,29 @@ export const bulkUpsertMarks = async (req: Request, res: Response) => {
     );
 
     res.json({ message: "Marks saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getMyMarks = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const student = await getStudentByUserId(userId);
+
+    if (!student) {
+      return res.status(404).json({ message: "Student profile not found" });
+    }
+
+    const marks = await markService.getStudentMarks(student.id);
+
+    res.json(marks);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

@@ -3,7 +3,7 @@ import * as studentService from "../services/student.service";
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
-    const student = await studentService.createStudent(req.body);
+    const { student } = await studentService.createStudent(req.body);
 
     res.status(201).json({
       message: "Student created",

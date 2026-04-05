@@ -28,7 +28,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const { title, placement, subtitle, year, description } = req.body;
     const updateData: any = {};
     if (title !== undefined) updateData.title = String(title);
@@ -46,7 +46,8 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    await achievementService.deleteAchievement(req.params.id);
+    const id = String(req.params.id);
+    await achievementService.deleteAchievement(id);
     res.json({ message: 'Achievement deleted' });
   } catch (e: any) {
     res.status(500).json({ message: e.message });
