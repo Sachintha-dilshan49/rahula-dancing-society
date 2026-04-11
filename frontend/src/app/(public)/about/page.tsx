@@ -1,7 +1,10 @@
-'use client';
-
 import { Target, Eye, Award, Heart, Users, BookOpen } from 'lucide-react';
 import Image from 'next/image';
+
+export const metadata = {
+  title: "About Us | Rahula Dancing Society",
+  description: "Our journey, mission, and dedication to excellence in traditional Sri Lankan dance.",
+};
 
 const coreValues = [
   {
@@ -76,10 +79,6 @@ export default function AboutPage() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 420px"
-                  onError={(e) => {
-                    // Fallback to a colored placeholder if image doesn't exist
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
                 />
                 {/* Placeholder background */}
                 <div className="w-full h-full bg-gradient-to-br from-rahula-blue/20 to-rahula-blue/40 flex items-center justify-center">

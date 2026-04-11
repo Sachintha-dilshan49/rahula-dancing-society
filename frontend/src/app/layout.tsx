@@ -1,7 +1,4 @@
 import "./globals.css";
-import Navbar from "@/features/public/components/navbar/navbar";
-import Footer from "@/features/public/components/footer/Footer";
-
 export default function RootLayout({
   children,
 }: {
@@ -9,10 +6,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="bg-white">
+        {children}
       </body>
     </html>
   );

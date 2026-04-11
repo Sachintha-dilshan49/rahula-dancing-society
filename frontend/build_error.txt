@@ -1,0 +1,28 @@
+﻿
+> rahula-dancing-society@0.1.0 build
+> next build
+
+node.exe : Γ¿» Unable to 
+acquire lock at C:\Project
+s\rahula-dancing-society\f
+rontend\.next\lock, is 
+another instance of next 
+build running?
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (Γ  
+  ¿» Unable to a... bui   
+ ld running?:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+  Suggestion: If you intended to restart next build, terminate the other process, and then try again.
