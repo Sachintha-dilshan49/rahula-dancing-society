@@ -8,7 +8,8 @@ import {
   User, 
   LogOut,
   GraduationCap,
-  BookMarked
+  BookMarked,
+  ClipboardList
 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 
@@ -16,6 +17,7 @@ const navItems = [
   { name: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
   { name: 'My Marks', href: '/student/marks', icon: FileText },
   { name: 'Past Papers', href: '/student/pastpapers', icon: BookMarked },
+  { name: 'Quizzes', href: '/student/quizzes', icon: ClipboardList },
   { name: 'My Profile', href: '/student/profile', icon: User },
 ];
 

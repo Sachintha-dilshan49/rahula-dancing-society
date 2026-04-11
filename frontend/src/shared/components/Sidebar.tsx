@@ -12,7 +12,8 @@ import {
   Music,
   BookMarked,
   Megaphone,
-  MessageSquare
+  MessageSquare,
+  ClipboardList
 } from 'lucide-react';
 
 const navItems = [
@@ -24,6 +25,7 @@ const navItems = [
   { name: 'Past Papers', href: '/teacher/pastpapers', icon: BookMarked },
   { name: 'Announcements', href: '/teacher/announcements', icon: Megaphone },
   { name: 'Notes', href: '/teacher/notes', icon: MessageSquare },
+  { name: 'Quizzes', href: '/teacher/quizzes', icon: ClipboardList },
 ];
 
 interface SidebarProps {

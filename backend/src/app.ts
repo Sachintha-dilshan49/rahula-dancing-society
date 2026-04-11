@@ -13,6 +13,7 @@ import galleryRoutes from "./routes/gallery.routes";
 import pastpaperRoutes from "./routes/pastpaper.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import noteRoutes from "./routes/note.routes";
+import quizRoutes from "./routes/quiz.routes";
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/pastpapers", pastpaperRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/quizzes", quizRoutes);
 
 export default app;

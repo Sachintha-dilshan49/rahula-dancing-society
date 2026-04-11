@@ -32,6 +32,7 @@ model Student {
 
   marks         Mark[]
   receivedNotes Note[]
+  quizAttempts  QuizAttempt[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -120,4 +121,46 @@ model Announcement {
   grade       Int?     // If null, it's an overall announcement
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Quiz {
+  id          String         @id @default(uuid())
+  title       String
+  description String?
+  grade       Int
+  startTime   DateTime
+  endTime     DateTime
+  duration    Int            // minutes allowed to complete
+  isPublished Boolean        @default(false)
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model QuizQuestion {
+  id            String @id @default(uuid())
+  quizId        String
+  quiz          Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question      String @db.Text
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String // "A" | "B" | "C" | "D"
+  orderIndex    Int
+}
+
+model QuizAttempt {
+  id          String   @id @default(uuid())
+  quizId      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  answers     Json     // { questionId: "A"|"B"|"C"|"D" }
+  score       Float
+  totalMarks  Int
+  submittedAt DateTime @default(now())
+
+  @@unique([quizId, studentId])
 }
