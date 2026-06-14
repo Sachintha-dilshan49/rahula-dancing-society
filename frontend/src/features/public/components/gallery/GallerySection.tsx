@@ -85,6 +85,7 @@ export default function GallerySection() {
                       src={galleryService.getMediaUrl(item.url)}
                       alt={item.title}
                       fill
+                      unoptimized
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
@@ -133,6 +134,7 @@ export default function GallerySection() {
                   src={galleryService.getMediaUrl(lightboxItem.url)}
                   alt={lightboxItem.title}
                   fill
+                  unoptimized
                   className="object-contain rounded-xl"
                   sizes="100vw"
                 />

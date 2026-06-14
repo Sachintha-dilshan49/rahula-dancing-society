@@ -1,4 +1,14 @@
+import { authService } from './auth.service';
+
 const API_URL = 'http://localhost:5000/api';
+
+function authHeaders(): HeadersInit {
+  const token = authService.getToken();
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+}
 
 export interface Student {
   id: string;
@@ -16,7 +26,7 @@ export type CreateStudentDTO = Omit<Student, 'id' | 'createdAt' | 'updatedAt'>;
 
 export const studentService = {
   async getStudents(): Promise<Student[]> {
-    const response = await fetch(`${API_URL}/students`);
+    const response = await fetch(`${API_URL}/students`, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error('Failed to fetch students');
     }
@@ -26,9 +36,7 @@ export const studentService = {
   async createStudent(data: CreateStudentDTO): Promise<{ student: Student }> {
     const response = await fetch(`${API_URL}/students`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -44,16 +52,14 @@ export const studentService = {
   async updateStudent(id: string, data: Partial<CreateStudentDTO>): Promise<Student> {
     const response = await fetch(`${API_URL}/students/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to update student');
     }
-    
+
     const result = await response.json();
     return result.student;
   },
@@ -61,8 +67,9 @@ export const studentService = {
   async deleteStudent(id: string): Promise<void> {
     const response = await fetch(`${API_URL}/students/${id}`, {
       method: 'DELETE',
+      headers: authHeaders(),
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to delete student');
     }

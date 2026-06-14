@@ -18,7 +18,8 @@ export const authService = {
     if (!token) return null;
 
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
       return { id: payload.id, role: payload.role };
     } catch {
       return null;

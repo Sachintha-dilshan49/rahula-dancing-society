@@ -1,5 +1,6 @@
-import { Target, Eye, Award, Heart, Users, BookOpen } from 'lucide-react';
+import { Target, Eye, Heart, Users, BookOpen } from 'lucide-react';
 import Image from 'next/image';
+import InstructorsSection from '@/features/public/components/about/InstructorsSection';
 
 export const metadata = {
   title: "About Us | Rahula Dancing Society",
@@ -26,33 +27,6 @@ const coreValues = [
     icon: <BookOpen className="w-6 h-6 text-rahula-blue" />,
     title: 'Education',
     desc: 'Comprehensive training in classical dance techniques.',
-  },
-];
-
-const instructors = [
-  {
-    name: 'Mr. Sanath Wijesinghe',
-    role: 'Master Instructor',
-    specialty: 'Kandyan Dance',
-    experience: '25+ years of experience',
-  },
-  {
-    name: 'Mrs. Chamari Perera',
-    role: 'Instructor',
-    specialty: 'Low Country Dance',
-    experience: '15+ years of experience',
-  },
-  {
-    name: 'Mr. Ruwan Jayawardena',
-    role: 'Instructor',
-    specialty: 'Sabaragamuwa Dance',
-    experience: '18+ years of experience',
-  },
-  {
-    name: 'Ms. Kavindi Fernando',
-    role: 'Assistant Instructor',
-    specialty: '',
-    experience: '8+ years of experience',
   },
 ];
 
@@ -163,28 +137,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Instructors */}
-      <section className="bg-[#f4f6fb] py-16">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-3xl font-extrabold text-rahula-blue text-center mb-12">Our Expert Instructors</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {instructors.map((inst) => (
-              <div key={inst.name} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-xl bg-[#e8ecf8] flex items-center justify-center shrink-0">
-                  <Award className="w-6 h-6 text-rahula-blue" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-rahula-blue text-base leading-tight">{inst.name}</h4>
-                  <p className="text-sm text-slate-500 mt-0.5">
-                    {inst.role}{inst.specialty ? ` - ${inst.specialty}` : ''}
-                  </p>
-                  <p className="text-sm text-slate-400 mt-1">{inst.experience}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Instructors — real teachers added by admin */}
+      <InstructorsSection />
 
       {/* Footer accent */}
       <div className="h-4 bg-rahula-blue" />

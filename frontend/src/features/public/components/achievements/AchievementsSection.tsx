@@ -48,10 +48,10 @@ export default function AchievementsSection() {
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           {[
-            { label: 'Total Awards', val: totalAwards > 0 ? `${totalAwards}+` : '150+' },
-            { label: 'Gold Medals', val: goldMedals > 0 ? goldMedals : 45 },
-            { label: 'National Titles', val: nationalTitles > 0 ? nationalTitles : 12 },
-            { label: 'International', val: international > 0 ? international : 8 },
+            { label: 'Total Awards', val: totalAwards },
+            { label: 'Gold Medals', val: goldMedals },
+            { label: 'National Titles', val: nationalTitles },
+            { label: 'International', val: international },
           ].map(stat => (
             <div key={stat.label} className="bg-white rounded-2xl px-4 py-6 md:px-6 md:py-8 text-center shadow-sm border border-slate-100">
               <div className="text-2xl md:text-4xl font-extrabold text-rahula-blue">{stat.val}</div>

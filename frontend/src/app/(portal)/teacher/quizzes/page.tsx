@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { quizService, Quiz } from '@/services/quiz.service';
 import { QuizFormModal } from "@/features/quizzes/components/QuizFormModal";
+import { ConfirmDialog } from "@/shared/components/ConfirmDialog";
 import Link from 'next/link';
 
 export default function TeacherQuizzesPage() {
@@ -28,6 +29,8 @@ export default function TeacherQuizzesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [confirmQuiz, setConfirmQuiz] = useState<Quiz | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchQuizzes();
@@ -45,22 +48,26 @@ export default function TeacherQuizzesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this quiz?')) {
-      try {
-        setStatus(null);
-        await quizService.deleteQuiz(id);
-        setStatus({ type: 'success', message: 'Quiz deleted successfully!' });
-        fetchQuizzes();
-        // Clear success message after 3 seconds
-        setTimeout(() => setStatus(null), 3000);
-      } catch (error: any) {
-        console.error('Error deleting quiz:', error);
-        setStatus({ 
-          type: 'error', 
-          message: error.message || 'Failed to delete quiz. Check console for details.' 
-        });
-      }
+  const handleDelete = async () => {
+    if (!confirmQuiz) return;
+    try {
+      setIsDeleting(true);
+      setStatus(null);
+      await quizService.deleteQuiz(confirmQuiz.id);
+      setStatus({ type: 'success', message: 'Quiz deleted successfully!' });
+      setConfirmQuiz(null);
+      fetchQuizzes();
+      // Clear success message after 3 seconds
+      setTimeout(() => setStatus(null), 3000);
+    } catch (error: any) {
+      console.error('Error deleting quiz:', error);
+      setConfirmQuiz(null);
+      setStatus({
+        type: 'error',
+        message: error.message || 'Failed to delete quiz. Check console for details.'
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -163,8 +170,8 @@ export default function TeacherQuizzesPage() {
                       >
                         <Edit2 size={16} />
                       </button>
-                      <button 
-                        onClick={() => handleDelete(quiz.id)}
+                      <button
+                        onClick={() => setConfirmQuiz(quiz)}
                         className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                       >
                         <Trash2 size={16} />
@@ -250,6 +257,17 @@ export default function TeacherQuizzesPage() {
           editingQuiz={editingQuiz}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={!!confirmQuiz}
+        title="Delete Quiz"
+        message={<>Are you sure you want to delete <strong className="text-slate-900">{confirmQuiz?.title}</strong>? This will permanently remove the quiz and all its attempts.</>}
+        confirmLabel="Yes, Delete"
+        variant="danger"
+        isLoading={isDeleting}
+        onConfirm={handleDelete}
+        onCancel={() => !isDeleting && setConfirmQuiz(null)}
+      />
     </div>
   );
 }

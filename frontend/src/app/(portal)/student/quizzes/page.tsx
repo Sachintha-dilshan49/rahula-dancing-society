@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { quizService, Quiz, QuizAttempt } from '@/services/quiz.service';
 import { authService } from '@/services/auth.service';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function StudentQuizzesPage() {
@@ -22,6 +23,7 @@ export default function StudentQuizzesPage() {
   const [attempts, setAttempts] = useState<Record<string, QuizAttempt>>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -50,8 +52,12 @@ export default function StudentQuizzesPage() {
       });
       setAttempts(attemptMap);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching student quiz data:', error);
+      if (error.message === 'Unauthorized' || error.message === 'No authentication token found') {
+        authService.removeToken();
+        router.push('/login');
+      }
     } finally {
       setLoading(false);
     }

@@ -95,7 +95,7 @@ export const submitAttempt = async (req: Request, res: Response) => {
   try {
     const { id: quizId } = req.params;
     const user = (req as any).user;
-    const studentId = await getStudentId(user.userId);
+    const studentId = await getStudentId(user.id);
     if (!studentId) return res.status(403).json({ message: "Student profile not found" });
 
     const { answers } = req.body;
@@ -111,10 +111,11 @@ export const getMyAttempt = async (req: Request, res: Response) => {
   try {
     const { id: quizId } = req.params;
     const user = (req as any).user;
-    const studentId = await getStudentId(user.userId);
+    const studentId = await getStudentId(user.id);
     if (!studentId) return res.status(403).json({ message: "Student profile not found" });
 
     const attempt = await quizService.getMyAttempt(quizId as string, studentId);
+    if (!attempt) return res.status(404).json({ message: "No attempt found" });
     res.json(attempt);
   } catch (error) {
     console.error(error);

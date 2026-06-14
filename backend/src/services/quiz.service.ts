@@ -50,7 +50,7 @@ export const createQuiz = async (data: CreateQuizInput) => {
 
 export const getQuizzes = async (grade?: number) => {
   return (prisma as any).quiz.findMany({
-    where: grade ? { grade } : undefined,
+    where: grade ? { grade, isPublished: true } : undefined,
     orderBy: { startTime: "desc" },
     include: {
       _count: { select: { questions: true, attempts: true } },
@@ -186,10 +186,16 @@ export const parseUploadedFile = async (filePath: string, mimeType: string): Pro
   const ext = path.extname(filePath).toLowerCase();
 
   if (ext === ".pdf" || mimeType === "application/pdf") {
-    const pdfParse = require("pdf-parse");
+    // pdf-parse v2 exposes a PDFParse class (the v1 callable default was removed)
+    const { PDFParse } = require("pdf-parse");
     const buffer = fs.readFileSync(filePath);
-    const data = await pdfParse(buffer);
-    return data.text || "";
+    const parser = new PDFParse({ data: buffer });
+    try {
+      const data = await parser.getText();
+      return data.text || "";
+    } finally {
+      await parser.destroy();
+    }
   }
 
   if ([".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {

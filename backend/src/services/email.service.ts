@@ -42,13 +42,13 @@ export const sendWelcomeEmail = async (email: string, name: string, password: st
             <!-- Header -->
             <div style="background:#0a1d56;padding:32px 40px;text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:22px;letter-spacing:0.5px;">Rahula Dancing Society</h1>
-              <p style="margin:6px 0 0;color:#a0aec0;font-size:13px;">Student Portal Access</p>
+              <p style="margin:6px 0 0;color:#a0aec0;font-size:13px;">Portal Access</p>
             </div>
             <!-- Body -->
             <div style="padding:40px;">
               <p style="color:#374151;font-size:16px;margin:0 0 8px;">Hi <strong>${name}</strong>,</p>
               <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 28px;">
-                Welcome to the Rahula Dancing Society! Your student account has been created. 
+                Welcome to the Rahula Dancing Society! Your account has been created.
                 Use the details below to log in to the portal.
               </p>
 

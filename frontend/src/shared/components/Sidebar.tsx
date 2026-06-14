@@ -1,22 +1,25 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Image as ImageIcon, 
-  Trophy, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Image as ImageIcon,
+  Trophy,
   LogOut,
   Music,
   BookMarked,
   Megaphone,
   MessageSquare,
-  ClipboardList
+  ClipboardList,
+  ShieldCheck
 } from 'lucide-react';
+import { authService } from '@/services/auth.service';
 
-const navItems = [
+const baseNavItems = [
   { name: 'Dashboard', href: '/teacher/dashboard', icon: LayoutDashboard },
   { name: 'Students', href: '/teacher/students', icon: Users },
   { name: 'Marks', href: '/teacher/marks', icon: FileText },
@@ -28,6 +31,9 @@ const navItems = [
   { name: 'Quizzes', href: '/teacher/quizzes', icon: ClipboardList },
 ];
 
+// Admin-only entry, inserted right after Dashboard
+const teachersNavItem = { name: 'Teachers', href: '/teacher/teachers', icon: ShieldCheck };
+
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +41,15 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(authService.getRoleFromToken() === 'ADMIN');
+  }, []);
+
+  const navItems = isAdmin
+    ? [baseNavItems[0], teachersNavItem, ...baseNavItems.slice(1)]
+    : baseNavItems;
 
   return (
     <>
@@ -56,7 +71,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
         <div>
           <h1 className="font-bold text-rahula-blue text-lg leading-tight">Rahula Dance</h1>
-          <p className="text-xs text-slate-500 font-medium tracking-wide">Teacher Portal</p>
+          <p className="text-xs text-slate-500 font-medium tracking-wide">{isAdmin ? 'Admin Portal' : 'Teacher Portal'}</p>
         </div>
       </div>
 

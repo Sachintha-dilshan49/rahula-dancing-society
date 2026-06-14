@@ -15,6 +15,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { quizService, Quiz, QuizQuestion, QuizAttempt } from '@/services/quiz.service';
+import { ConfirmDialog } from '@/shared/components/ConfirmDialog';
 import { useRouter } from 'next/navigation';
 
 export default function StudentQuizTakingPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
@@ -29,6 +30,7 @@ export default function StudentQuizTakingPage({ params: paramsPromise }: { param
   const [attempt, setAttempt] = useState<QuizAttempt | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
   const submitQuiz = useCallback(async () => {
     if (isSubmitting || isFinished) return;
@@ -185,12 +187,8 @@ export default function StudentQuizTakingPage({ params: paramsPromise }: { param
       <div className="bg-white border-b border-slate-100 sticky top-0 z-40 px-4 md:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <button 
-              onClick={() => {
-                if (window.confirm('Are you sure you want to leave? Your progress will not be saved until you submit.')) {
-                  router.push('/student/quizzes');
-                }
-              }}
+            <button
+              onClick={() => setShowLeaveConfirm(true)}
               className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
             >
               <X size={20} />
@@ -357,6 +355,20 @@ export default function StudentQuizTakingPage({ params: paramsPromise }: { param
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={showLeaveConfirm}
+        title="Leave Quiz?"
+        message="Are you sure you want to leave? Your progress will not be saved until you submit."
+        confirmLabel="Leave Quiz"
+        cancelLabel="Stay"
+        variant="warning"
+        onConfirm={() => {
+          setShowLeaveConfirm(false);
+          router.push('/student/quizzes');
+        }}
+        onCancel={() => setShowLeaveConfirm(false)}
+      />
     </div>
   );
 }

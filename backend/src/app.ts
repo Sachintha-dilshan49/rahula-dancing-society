@@ -14,6 +14,7 @@ import pastpaperRoutes from "./routes/pastpaper.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import noteRoutes from "./routes/note.routes";
 import quizRoutes from "./routes/quiz.routes";
+import teacherRoutes from "./routes/teacher.routes";
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use("/api/pastpapers", pastpaperRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/quizzes", quizRoutes);
+app.use("/api/teachers", teacherRoutes);
 
 export default app;

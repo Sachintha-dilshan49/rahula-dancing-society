@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Trophy } from 'lucide-react';
 import { achievementService, Achievement } from '@/services/achievement.service';
+import { ConfirmDialog } from '@/shared/components/ConfirmDialog';
 import { X, Save } from 'lucide-react';
 
 function AchievementModal({
@@ -107,6 +108,7 @@ export default function TeacherAchievementsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Achievement | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmItem, setConfirmItem] = useState<Achievement | null>(null);
 
   const load = async () => {
     try { setLoading(true); setAchievements(await achievementService.getAll()); } catch (e) { console.error(e); } finally { setLoading(false); }
@@ -114,9 +116,10 @@ export default function TeacherAchievementsPage() {
 
   useEffect(() => { load(); }, []);
 
-  const handleDelete = async (a: Achievement) => {
-    if (!confirm(`Delete "${a.title}"?`)) return;
-    try { setDeleting(a.id); await achievementService.delete(a.id); setAchievements(prev => prev.filter(x => x.id !== a.id)); } finally { setDeleting(null); }
+  const handleDelete = async () => {
+    if (!confirmItem) return;
+    const id = confirmItem.id;
+    try { setDeleting(id); await achievementService.delete(id); setAchievements(prev => prev.filter(x => x.id !== id)); setConfirmItem(null); } finally { setDeleting(null); }
   };
 
   const openEdit = (a: Achievement) => { setEditing(a); setModalOpen(true); };
@@ -170,7 +173,7 @@ export default function TeacherAchievementsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
                       <button onClick={() => openEdit(a)} className="p-1.5 text-slate-400 hover:text-rahula-blue hover:bg-slate-100 rounded-lg transition-colors"><Edit size={17} /></button>
-                      <button onClick={() => handleDelete(a)} disabled={deleting === a.id} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-40">
+                      <button onClick={() => setConfirmItem(a)} disabled={deleting === a.id} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-40">
                         {deleting === a.id ? <div className="w-4 h-4 border-2 border-red-300 border-t-red-500 rounded-full animate-spin" /> : <Trash2 size={17} />}
                       </button>
                     </div>
@@ -183,6 +186,17 @@ export default function TeacherAchievementsPage() {
       </div>
 
       <AchievementModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSuccess={load} initial={editing} />
+
+      <ConfirmDialog
+        isOpen={!!confirmItem}
+        title="Delete Achievement"
+        message={<>Are you sure you want to delete <strong className="text-slate-900">{confirmItem?.title}</strong>? This action cannot be undone.</>}
+        confirmLabel="Yes, Delete"
+        variant="danger"
+        isLoading={deleting === confirmItem?.id}
+        onConfirm={handleDelete}
+        onCancel={() => !deleting && setConfirmItem(null)}
+      />
     </div>
   );
 }

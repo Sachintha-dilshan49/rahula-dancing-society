@@ -6,8 +6,12 @@ import {
   deleteStudent,
   promoteStudents
 } from "../controllers/student.controller";
+import { authenticate, authorize } from "../middlewares/auth.middleware";
 
 const router = Router();
+
+// Student management is restricted to teachers and admins
+router.use(authenticate, authorize(["TEACHER", "ADMIN"]));
 
 router.post("/promote", promoteStudents);
 router.post("/", createStudent);

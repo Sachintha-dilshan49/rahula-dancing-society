@@ -12,7 +12,6 @@ export default function Navbar() {
     { name: "Achievements", href: "/achievements" },
     { name: "Gallery", href: "/gallery" },
     { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
   ];
 
   return (

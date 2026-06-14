@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Upload, Trash2, Play, Eye } from 'lucide-react';
 import { galleryService, GalleryItem, GalleryCategory } from '@/services/gallery.service';
+import { ConfirmDialog } from '@/shared/components/ConfirmDialog';
 import Image from 'next/image';
 
 const CATEGORY_LABELS: Record<GalleryCategory, string> = {
@@ -81,7 +82,7 @@ function UploadModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; onClose:
                 {isVideo ? (
                   <video src={preview} className="w-full h-full object-cover rounded-lg" />
                 ) : (
-                  <Image src={preview} alt="preview" fill className="object-cover rounded-lg" sizes="400px" />
+                  <Image src={preview} alt="preview" fill unoptimized className="object-cover rounded-lg" sizes="400px" />
                 )}
               </div>
             ) : (
@@ -141,6 +142,7 @@ export default function TeacherGalleryPage() {
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmItem, setConfirmItem] = useState<GalleryItem | null>(null);
 
   const load = async () => {
     try {
@@ -156,12 +158,14 @@ export default function TeacherGalleryPage() {
 
   useEffect(() => { load(); }, []);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this media item?')) return;
+  const handleDelete = async () => {
+    if (!confirmItem) return;
+    const id = confirmItem.id;
     try {
       setDeleting(id);
       await galleryService.delete(id);
       setItems(prev => prev.filter(i => i.id !== id));
+      setConfirmItem(null);
     } catch (e) {
       console.error(e);
     } finally {
@@ -219,6 +223,7 @@ export default function TeacherGalleryPage() {
                   src={galleryService.getMediaUrl(item.url)}
                   alt={item.title}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -259,7 +264,7 @@ export default function TeacherGalleryPage() {
                   View
                 </a>
                 <button
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => setConfirmItem(item)}
                   disabled={deleting === item.id}
                   className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-40"
                 >
@@ -276,6 +281,17 @@ export default function TeacherGalleryPage() {
       )}
 
       <UploadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={load} />
+
+      <ConfirmDialog
+        isOpen={!!confirmItem}
+        title="Delete Media"
+        message={<>Are you sure you want to delete <strong className="text-slate-900">{confirmItem?.title}</strong>? This media will be permanently removed from the gallery.</>}
+        confirmLabel="Yes, Delete"
+        variant="danger"
+        isLoading={deleting === confirmItem?.id}
+        onConfirm={handleDelete}
+        onCancel={() => !deleting && setConfirmItem(null)}
+      />
     </div>
   );
 }
