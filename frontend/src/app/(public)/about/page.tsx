@@ -48,16 +48,12 @@ export default function AboutPage() {
             <div className="w-full md:w-[420px] shrink-0">
               <div className="relative w-full aspect-[16/10] md:aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/about-story.jpg"
-                  alt="Rahula Dancing Society Performance"
+                  src="/images/about/dance.jpg"
+                  alt="Traditional Sri Lankan dance performance"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 420px"
                 />
-                {/* Placeholder background */}
-                <div className="w-full h-full bg-gradient-to-br from-rahula-blue/20 to-rahula-blue/40 flex items-center justify-center">
-                  <span className="text-rahula-blue/60 text-sm font-medium">Performance Photo</span>
-                </div>
               </div>
             </div>
 
