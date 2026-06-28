@@ -7,17 +7,17 @@ import { teacherService, PublicTeacher } from '@/services/teacher.service';
 export default function InstructorsSection() {
   const [instructors, setInstructors] = useState<PublicTeacher[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     teacherService
       .getPublicTeachers()
       .then(setInstructors)
-      .catch(console.error)
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  // Hide the whole section until at least one teacher has been added
-  if (!loading && instructors.length === 0) return null;
+  if (!loading && (error || instructors.length === 0)) return null;
 
   return (
     <section className="bg-[#f4f6fb] py-16">
@@ -39,7 +39,7 @@ export default function InstructorsSection() {
                   <Award className="w-6 h-6 text-rahula-blue" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-rahula-blue text-base leading-tight">{inst.name}</h4>
+                  <h4 className="font-extrabold text-rahula-blue text-base leading-tight">{inst.name ?? 'Instructor'}</h4>
                   <p className="text-sm text-slate-500 mt-0.5">Instructor</p>
                 </div>
               </div>

@@ -41,7 +41,7 @@ export default function Hero() {
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
 
           <Link
-            href="#about"
+            href="/about"
             className="px-6 py-3 bg-[var(--rahula-gold)] text-[var(--rahula-dark)] font-semibold rounded-lg hover:scale-105 transition duration-300"
           >
             Explore More

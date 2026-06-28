@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/shared/ui/Container";
 import { ArrowRight } from "lucide-react";
 
@@ -27,7 +28,7 @@ export default function About() {
               </h2>
 
               <p className="text-gray-600 leading-relaxed">
-                Founded in 2000, the Rahula College Dancing Society has grown
+                Founded in 2001, the Rahula College Dancing Society has grown
                 into one of Sri Lanka’s respected school-level dance
                 organizations. We preserve Kandyan and Pahatharata traditions
                 while embracing modern artistic expression.
@@ -39,19 +40,13 @@ export default function About() {
                 Rahula College at provincial and national events.
               </p>
 
-              <button className="
-                inline-flex 
-                items-center 
-                gap-2 
-                text-[var(--rahula-blue)] 
-                font-medium 
-                hover:gap-3 
-                transition-all 
-                duration-300
-              ">
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-2 text-[var(--rahula-blue)] font-medium hover:gap-3 transition-all duration-300"
+              >
                 Learn More
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
 
             {/* RIGHT IMAGE */}

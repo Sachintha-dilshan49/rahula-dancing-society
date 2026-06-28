@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Trophy, Medal } from 'lucide-react';
 import { achievementService, Achievement } from '@/services/achievement.service';
 
-const YEARS = [2026, 2025, 2024, 2023];
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: 4 }, (_, i) => currentYear - i);
 
 const placementIcon = (placement: string) => {
   const p = placement.toLowerCase();

@@ -34,9 +34,9 @@ export default function GallerySection() {
 
   const filtered = filter === 'ALL' ? items : items.filter(i => i.category === filter);
 
-  const openLightbox = async (item: GalleryItem) => {
+  const openLightbox = (item: GalleryItem) => {
     setLightboxItem(item);
-    await galleryService.incrementViews(item.id);
+    galleryService.incrementViews(item.id).catch(() => {});
   };
 
   return (
@@ -71,7 +71,9 @@ export default function GallerySection() {
               <div className="w-8 h-8 border-4 border-slate-200 border-t-rahula-blue rounded-full animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-16 text-slate-400">No media uploaded yet.</div>
+            <div className="text-center py-16 text-slate-400">
+              {items.length === 0 ? 'No media uploaded yet.' : 'No items in this category.'}
+            </div>
           ) : (
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
               {filtered.map(item => (
