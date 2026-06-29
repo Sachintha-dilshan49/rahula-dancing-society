@@ -49,9 +49,13 @@ export const createQuiz = async (data: CreateQuizInput) => {
   });
 };
 
-export const getQuizzes = async (grade?: number) => {
+export const getQuizzes = async (grade?: number, publishedOnly = false) => {
+  const where: any = {};
+  if (grade) where.grade = grade;
+  if (publishedOnly) where.isPublished = true;
+
   return (prisma as any).quiz.findMany({
-    where: grade ? { grade, isPublished: true } : undefined,
+    where: Object.keys(where).length > 0 ? where : undefined,
     orderBy: { startTime: "desc" },
     include: {
       _count: { select: { questions: true, attempts: true } },

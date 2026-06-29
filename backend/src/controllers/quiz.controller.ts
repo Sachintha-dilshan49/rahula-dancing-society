@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as quizService from "../services/quiz.service";
+import { checkStudentQuizAccess } from "../utils/quizAccess";
 import fs from "fs";
 
 // Helper to get student ID from the currently logged-in user
@@ -24,7 +25,14 @@ export const createQuiz = async (req: Request, res: Response) => {
 export const getQuizzes = async (req: Request, res: Response) => {
   try {
     const { grade } = req.query;
-    const quizzes = await quizService.getQuizzes(grade ? parseInt(grade as string) : undefined);
+    const user = (req as any).user;
+    // Students must only ever see published quizzes — even if they omit the
+    // grade filter. Teachers/admins still see their unpublished drafts.
+    const publishedOnly = user?.role === "STUDENT";
+    const quizzes = await quizService.getQuizzes(
+      grade ? parseInt(grade as string) : undefined,
+      publishedOnly
+    );
     res.json(quizzes);
   } catch (error) {
     console.error(error);
@@ -36,10 +44,21 @@ export const getQuizById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
     const user = (req as any).user;
-    const includeCorrect = user.role === "TEACHER" || user.role === "ADMIN";
+    const isPrivileged = user.role === "TEACHER" || user.role === "ADMIN";
 
-    const quiz = await quizService.getQuizById(id, includeCorrect);
+    const quiz = await quizService.getQuizById(id, isPrivileged);
     if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+
+    // Enforce exam integrity server-side: students may only read a quiz that is
+    // published and has already started. The client-side time check is cosmetic
+    // and can be bypassed by calling the API directly.
+    if (!isPrivileged) {
+      const access = checkStudentQuizAccess(quiz);
+      if (!access.allowed) {
+        return res.status(access.status).json({ message: access.message });
+      }
+    }
+
     res.json(quiz);
   } catch (error: any) {
     console.error("Get Quiz Error:", error);
