@@ -20,7 +20,9 @@ import statsRoutes from "./routes/stats.routes";
 const app = express();
 
 /* Middlewares */
-app.use(cors());
+// In production set FRONTEND_URL to your deployed site to lock CORS to it;
+// when unset (local dev) all origins are allowed.
+app.use(cors(process.env.FRONTEND_URL ? { origin: process.env.FRONTEND_URL } : undefined));
 app.use(express.json());
 
 /* Static Files – serve uploaded media */
