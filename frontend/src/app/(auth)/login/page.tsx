@@ -10,6 +10,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -79,13 +80,36 @@ export default function LoginPage() {
 
           <label>Password</label>
 
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ paddingRight: "2.5rem", width: "100%" }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              style={{
+                position: "absolute",
+                right: "0.75rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "#6b7280",
+                padding: 0,
+                display: "flex",
+                alignItems: "center",
+              }}
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           <div className="forgot">
             <Link href="/forgot-password">
