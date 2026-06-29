@@ -9,6 +9,7 @@ export interface StudentProfile {
   phone: string | null;
   parentContact: string | null;
   notes: string | null;
+  photoUrl: string | null;
   userId: string | null;
   createdAt: string;
   updatedAt: string;
@@ -65,6 +66,29 @@ export const studentPortalService = {
 
     if (!response.ok) {
       throw new Error("Failed to fetch marks");
+    }
+
+    return response.json();
+  },
+
+  // Student updates their own photo only — the server resolves the student from
+  // the auth token, so no id is sent or accepted.
+  async updateMyPhoto(photo: File): Promise<{ student: StudentProfile }> {
+    const token = authService.getToken();
+    if (!token) throw new Error("No authentication token found");
+
+    const form = new FormData();
+    form.append("photo", photo);
+
+    const response = await fetch(`${API_URL}/students/me/photo`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || "Failed to update photo");
     }
 
     return response.json();

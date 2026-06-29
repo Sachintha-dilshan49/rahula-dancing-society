@@ -10,3 +10,8 @@ export const API_BASE = RAW_BASE.replace(/\/+$/, "");
 
 // Base URL for all REST endpoints.
 export const API_URL = `${API_BASE}/api`;
+
+// Builds an absolute URL for an uploaded media path (e.g. "/uploads/x.jpg")
+// returned by the API. Returns "" for empty values so callers can fall back.
+export const mediaUrl = (path?: string | null): string =>
+  path ? `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}` : "";

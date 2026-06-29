@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Check, Mail } from 'lucide-react';
+import { X, Check, Mail, Camera, Trash2 } from 'lucide-react';
 import { studentService } from '@/services/student.service';
 
 interface AddStudentModalProps {
@@ -20,11 +20,35 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
     notes: ''
   });
   
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successData, setSuccessData] = useState<{ name: string; email: string } | null>(null);
 
   if (!isOpen) return null;
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Photo must be an image file.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Photo must be smaller than 5MB.');
+      return;
+    }
+    setError(null);
+    setPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const removePhoto = () => {
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhoto(null);
+    setPhotoPreview(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +67,11 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
         phone: formData.phone || null,
         parentContact: formData.parentContact || null,
         notes: formData.notes || null
-      });
+      }, photo);
 
       setSuccessData({ name: formData.name, email: formData.email });
       setFormData({ name: '', grade: '', email: '', phone: '', parentContact: '', notes: '' });
+      removePhoto();
       onSuccess();
     } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'An error occurred while creating the student.');
@@ -128,6 +153,38 @@ export function AddStudentModal({ isOpen, onClose, onSuccess }: AddStudentModalP
           )}
           
           <form id="add-student-form" onSubmit={handleSubmit} className="space-y-6">
+            {/* Photo (optional) */}
+            <div className="flex items-center gap-5">
+              <div className="w-20 h-20 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                {photoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={photoPreview} alt="Student preview" className="w-full h-full object-cover" />
+                ) : (
+                  <Camera size={26} className="text-slate-300" />
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-700 block">Student Photo <span className="font-normal text-slate-400">(optional)</span></label>
+                <div className="flex items-center gap-2">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-rahula-blue bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                    <Camera size={16} />
+                    {photoPreview ? 'Change' : 'Upload'}
+                    <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                  </label>
+                  {photoPreview && (
+                    <button
+                      type="button"
+                      onClick={removePhoto}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={15} /> Remove
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500">JPG or PNG, up to 5MB.</p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Name (Full Width on mobile, half on MD) */}
               <div className="space-y-2 col-span-1 md:col-span-2">

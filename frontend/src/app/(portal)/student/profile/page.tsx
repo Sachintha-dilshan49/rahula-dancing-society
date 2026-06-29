@@ -2,24 +2,53 @@
 
 import { useEffect, useState } from 'react';
 import { studentPortalService, StudentProfile } from '@/services/student-portal.service';
+import { mediaUrl } from '@/config/api';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
-import { 
+import {
   User,
-  Mail, 
-  Phone, 
-  GraduationCap, 
-  Users, 
+  Mail,
+  Phone,
+  GraduationCap,
+  Users,
   StickyNote,
   Calendar,
-  Shield
+  Shield,
+  Camera,
+  Loader2
 } from 'lucide-react';
 
 export default function StudentProfilePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [userEmail, setUserEmail] = useState('');
   const [loading, setLoading] = useState(true);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const router = useRouter();
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setPhotoError('Photo must be an image file.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError('Photo must be smaller than 5MB.');
+      return;
+    }
+    setPhotoError(null);
+    setUploadingPhoto(true);
+    try {
+      const res = await studentPortalService.updateMyPhoto(file);
+      setProfile((prev) => (prev ? { ...prev, photoUrl: res.student.photoUrl } : prev));
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : 'Failed to update photo.');
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = '';
+    }
+  };
 
   useEffect(() => {
     const role = authService.getRoleFromToken();
@@ -88,9 +117,28 @@ export default function StudentProfilePage() {
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/3"></div>
         
         <div className="relative flex items-center gap-6">
-          {/* Avatar */}
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl font-bold backdrop-blur-sm border border-white/20">
-            {initials}
+          {/* Avatar (student can update their own photo) */}
+          <div className="relative shrink-0">
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl font-bold backdrop-blur-sm border border-white/20 overflow-hidden">
+              {profile.photoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={mediaUrl(profile.photoUrl)} alt={profile.name} className="w-full h-full object-cover" />
+              ) : (
+                initials
+              )}
+              {uploadingPhoto && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Loader2 size={24} className="animate-spin text-white" />
+                </div>
+              )}
+            </div>
+            <label
+              title="Update photo"
+              className="absolute -bottom-1.5 -right-1.5 w-8 h-8 bg-white text-rahula-blue rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-50 transition-colors border border-blue-100"
+            >
+              <Camera size={15} />
+              <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" disabled={uploadingPhoto} />
+            </label>
           </div>
           
           <div>
@@ -111,6 +159,12 @@ export default function StudentProfilePage() {
           </div>
         </div>
       </div>
+
+      {photoError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+          {photoError}
+        </div>
+      )}
 
       {/* Info Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

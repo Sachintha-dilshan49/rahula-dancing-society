@@ -28,6 +28,7 @@ model Student {
   phone         String?
   parentContact String?
   notes         String?
+  photoUrl      String?
   userId        String?  @unique
   user          User?    @relation(fields: [userId], references: [id])
 

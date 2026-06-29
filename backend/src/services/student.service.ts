@@ -1,7 +1,21 @@
 import { prisma } from "../config/prisma";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
 import { sendWelcomeEmail } from "./email.service";
+
+// Removes an uploaded file from the uploads directory given its public URL
+// (e.g. "/uploads/123.jpg"). Best-effort — never throws.
+const removeUploadByUrl = (url?: string | null) => {
+  if (!url) return;
+  try {
+    const filePath = path.join(process.cwd(), "uploads", path.basename(url));
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  } catch (err) {
+    console.error("Failed to remove upload:", err);
+  }
+};
 
 export const createStudent = async (studentData: any) => {
   const { email, ...rest } = studentData;
@@ -129,5 +143,24 @@ export const promoteStudents = async () => {
         increment: 1
       }
     }
+  });
+};
+
+// Updates a student's photo, identified by their linked user account. Used by
+// the student-portal "update my photo" flow — a student may only ever change
+// their own photo. Removes the previous photo file from disk.
+export const updateStudentPhotoByUserId = async (userId: string, photoUrl: string) => {
+  const student = await prisma.student.findUnique({ where: { userId } });
+  if (!student) {
+    const error: any = new Error("Student profile not found");
+    error.status = 404;
+    throw error;
+  }
+
+  removeUploadByUrl(student.photoUrl);
+
+  return prisma.student.update({
+    where: { id: student.id },
+    data: { photoUrl },
   });
 };

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Filter, Edit, Trash2 } from 'lucide-react';
 import { studentService, Student } from '@/services/student.service';
+import { mediaUrl } from '@/config/api';
 import { AddStudentModal } from './AddStudentModal';
 import { EditStudentModal } from './EditStudentModal';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
@@ -123,9 +124,18 @@ export function StudentsTable() {
                 <tr key={student.id} className="hover:bg-slate-50/50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-rahula-blue text-white font-medium text-sm shadow-sm">
-                        {student.name.charAt(0).toUpperCase()}
-                      </div>
+                      {student.photoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={mediaUrl(student.photoUrl)}
+                          alt={student.name}
+                          className="w-9 h-9 rounded-lg object-cover shadow-sm shrink-0"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-rahula-blue text-white font-medium text-sm shadow-sm shrink-0">
+                          {student.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <span className="font-semibold text-slate-800">{student.name}</span>
                     </div>
                   </td>
