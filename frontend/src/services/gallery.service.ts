@@ -1,4 +1,10 @@
+import { authService } from './auth.service';
+
 const API_URL = 'http://localhost:5000/api';
+
+function authHeaders(): HeadersInit {
+  return { Authorization: `Bearer ${authService.getToken()}` };
+}
 
 export type MediaType = 'PHOTO' | 'VIDEO';
 export type GalleryCategory = 'PERFORMANCES' | 'REHEARSALS' | 'AWARDS' | 'CULTURAL_EVENTS';
@@ -30,6 +36,7 @@ export const galleryService = {
 
     const res = await fetch(`${API_URL}/gallery`, {
       method: 'POST',
+      headers: authHeaders(),
       body: formData,
     });
     if (!res.ok) throw new Error('Failed to upload media');
@@ -38,7 +45,7 @@ export const galleryService = {
   },
 
   async delete(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/gallery/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API_URL}/gallery/${id}`, { method: 'DELETE', headers: authHeaders() });
     if (!res.ok) throw new Error('Failed to delete gallery item');
   },
 

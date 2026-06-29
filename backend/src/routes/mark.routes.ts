@@ -12,8 +12,8 @@ const router = Router();
 // Student-only: get my own marks (must be before /:studentId to avoid conflict)
 router.get("/my-marks", authenticate, authorize(["STUDENT"]), getMyMarks);
 
-router.get("/", getMarksByGradeAndTerm);
-router.post("/bulk", bulkUpsertMarks);
-router.get("/student/:studentId", getStudentMarks);
+router.get("/", authenticate, authorize(["TEACHER", "ADMIN"]), getMarksByGradeAndTerm);
+router.post("/bulk", authenticate, authorize(["TEACHER", "ADMIN"]), bulkUpsertMarks);
+router.get("/student/:studentId", authenticate, authorize(["TEACHER", "ADMIN"]), getStudentMarks);
 
 export default router;

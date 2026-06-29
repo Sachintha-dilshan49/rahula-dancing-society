@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
@@ -41,11 +41,17 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     setIsAdmin(authService.getRoleFromToken() === 'ADMIN');
   }, []);
+
+  const handleLogout = () => {
+    authService.removeToken();
+    router.push('/login');
+  };
 
   const navItems = isAdmin
     ? [baseNavItems[0], teachersNavItem, ...baseNavItems.slice(1)]
@@ -105,7 +111,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Logout */}
       <div className="p-4 border-t border-slate-100">
-        <button className="flex items-center space-x-3 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-lg transition-colors group">
+        <button onClick={handleLogout} className="flex items-center space-x-3 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-lg transition-colors group">
           <LogOut size={20} className="text-red-400 group-hover:text-red-500" />
           <span className="font-medium text-sm">Logout</span>
         </button>

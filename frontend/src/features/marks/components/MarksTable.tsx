@@ -42,7 +42,8 @@ export function MarksTable() {
 
   const calculateAverage = (practical: number | null, paper: number | null) => {
     if (practical === null && paper === null) return null;
-    return Math.round(((practical || 0) + (paper || 0)) / 2);
+    const count = (practical !== null ? 1 : 0) + (paper !== null ? 1 : 0);
+    return Math.round(((practical ?? 0) + (paper ?? 0)) / count);
   };
 
   return (

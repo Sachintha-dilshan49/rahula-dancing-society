@@ -1,6 +1,11 @@
 import { Student } from './student.service';
+import { authService } from './auth.service';
 
 const API_URL = 'http://localhost:5000/api';
+
+function authHeaders(): HeadersInit {
+  return { 'Authorization': `Bearer ${authService.getToken()}` };
+}
 
 export interface Mark {
   id: string;
@@ -27,7 +32,7 @@ export interface BulkMarkInput {
 
 export const markService = {
   async getStudentsWithMarks(grade: number, term: number): Promise<StudentWithMarks[]> {
-    const response = await fetch(`${API_URL}/marks?grade=${grade}&term=${term}`);
+    const response = await fetch(`${API_URL}/marks?grade=${grade}&term=${term}`, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error('Failed to fetch marks');
     }
@@ -35,7 +40,7 @@ export const markService = {
   },
 
   async getStudentHistoricalMarks(studentId: string): Promise<Mark[]> {
-    const response = await fetch(`${API_URL}/marks/student/${studentId}`);
+    const response = await fetch(`${API_URL}/marks/student/${studentId}`, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error('Failed to fetch historical marks');
     }
@@ -47,6 +52,7 @@ export const markService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders(),
       },
       body: JSON.stringify({ grade, term, marks }),
     });
