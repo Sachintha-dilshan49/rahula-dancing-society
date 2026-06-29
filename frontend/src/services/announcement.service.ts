@@ -1,6 +1,5 @@
 import { authService } from './auth.service';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '@/config/api';
 
 export interface Announcement {
   id: string;

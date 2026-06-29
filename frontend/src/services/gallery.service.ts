@@ -1,6 +1,5 @@
 import { authService } from './auth.service';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL, API_BASE } from '@/config/api';
 
 function authHeaders(): HeadersInit {
   return { Authorization: `Bearer ${authService.getToken()}` };
@@ -54,6 +53,6 @@ export const galleryService = {
   },
 
   getMediaUrl(url: string): string {
-    return `http://localhost:5000${url}`;
+    return `${API_BASE}${url}`;
   },
 };

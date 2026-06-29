@@ -139,10 +139,29 @@ export const verifyOtp = async (req: Request, res: Response) => {
 export const resetPassword = async (req: Request, res: Response) => {
   try {
 
-    const { email, newPassword } = req.body;
+    const { email, otp, newPassword } = req.body;
 
-    if (!email || !newPassword) {
-      return res.status(400).json({ message: "Email and new password are required" });
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: "Email, OTP and new password are required" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Re-verify the OTP server-side. verify-otp is stateless, so the reset
+    // endpoint must confirm a valid, unexpired OTP before changing the password —
+    // otherwise anyone who knows an email could reset the account.
+    if (!user.otp || user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (!user.otpExpiresAt || user.otpExpiresAt < new Date()) {
+      return res.status(400).json({ message: "OTP expired. Please request a new one." });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);

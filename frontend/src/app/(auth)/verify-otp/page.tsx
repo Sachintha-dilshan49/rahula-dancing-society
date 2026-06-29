@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/config/api";
 
 export default function VerifyOtp() {
 
@@ -35,6 +36,9 @@ export default function VerifyOtp() {
     const data = await res.json();
 
     if (res.ok) {
+
+      // Persist the verified OTP so the reset-password step can prove it server-side.
+      localStorage.setItem("resetOtp", otp);
 
       setMessage("OTP verified successfully ");
 

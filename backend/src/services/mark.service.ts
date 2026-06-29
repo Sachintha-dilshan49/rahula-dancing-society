@@ -5,7 +5,9 @@ export const getStudentsWithMarks = async (grade: number, term: number) => {
     where: { grade },
     include: {
       marks: {
-        where: { term }
+        // Filter by grade as well as term — otherwise a promoted student's
+        // same-term mark from a previous grade would leak into this view.
+        where: { grade, term }
       }
     },
     orderBy: { name: "asc" }

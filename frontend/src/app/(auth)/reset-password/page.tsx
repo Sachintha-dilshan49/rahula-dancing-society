@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/config/api";
 
 export default function ResetPassword() {
 
@@ -25,13 +26,22 @@ export default function ResetPassword() {
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+    const otp =
+      typeof window !== "undefined" ? localStorage.getItem("resetOtp") : null;
+
+    if (!email || !otp) {
+      setMessage("Your reset session has expired. Please request a new OTP.");
+      return;
+    }
+
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email,
+        otp,
         newPassword: password,
       }),
     });
@@ -39,6 +49,9 @@ export default function ResetPassword() {
     const data = await res.json();
 
     if (res.ok) {
+      // Clear the one-time reset session.
+      localStorage.removeItem("resetEmail");
+      localStorage.removeItem("resetOtp");
       setSuccess(true);
       setMessage("Password reset successful ");
     } else {
