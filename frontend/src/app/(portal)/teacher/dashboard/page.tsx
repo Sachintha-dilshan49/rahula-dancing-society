@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Users, FileText, ImageIcon, Trophy, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { API_URL } from '@/config/api';
 
 export default function TeacherDashboard() {
   const [stats, setStats] = useState({ students: 0, marks: 0, gallery: 0, achievements: 0 });
@@ -19,9 +20,9 @@ export default function TeacherDashboard() {
         };
 
         const [studentsRes, galleryRes, achievementsRes] = await Promise.all([
-          fetch('http://localhost:5000/api/students', { headers }),
-          fetch('http://localhost:5000/api/gallery', { headers }),
-          fetch('http://localhost:5000/api/achievements', { headers })
+          fetch(`${API_URL}/students`, { headers }),
+          fetch(`${API_URL}/gallery`, { headers }),
+          fetch(`${API_URL}/achievements`, { headers })
         ]);
 
         const students = await studentsRes.ok ? await studentsRes.json() : [];

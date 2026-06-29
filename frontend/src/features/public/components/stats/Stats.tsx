@@ -3,8 +3,7 @@
 import Container from "@/shared/ui/Container";
 import { Trophy, Users, Calendar, Award } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const API_URL = "http://localhost:5000/api";
+import { API_URL } from "@/config/api";
 
 function Counter({ target }: { target: number }) {
   const [count, setCount] = useState(0);

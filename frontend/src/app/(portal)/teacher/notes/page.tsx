@@ -7,6 +7,7 @@ import { noteService, Note } from '@/services/note.service';
 import { studentPortalService } from '@/services/student-portal.service';
 import { MessageSquare, Plus, Trash2, User, Users } from 'lucide-react';
 import { SendNoteModal } from '@/features/notes/components/SendNoteModal';
+import { API_URL } from '@/config/api';
 
 interface Student { id: string; name: string; grade: number; }
 
@@ -40,7 +41,7 @@ export default function TeacherNotesPage() {
 
     // Load students for the modal dropdown
     const token = authService.getToken();
-    fetch('http://localhost:5000/api/students', {
+    fetch(`${API_URL}/students`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(r => r.json())

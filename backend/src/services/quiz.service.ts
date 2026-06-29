@@ -1,6 +1,7 @@
 import { prisma } from "../config/prisma";
 import path from "path";
 import fs from "fs";
+import { scoreAttempt } from "../utils/quizScoring";
 
 export interface QuestionInput {
   question: string;
@@ -145,13 +146,7 @@ export const submitAttempt = async (
     throw new Error("Quiz submission window has closed.");
 
   // Score the answers
-  let correct = 0;
-  for (const q of quiz.questions) {
-    if (answers[q.id] === q.correctAnswer) correct++;
-  }
-  const score = quiz.questions.length > 0
-    ? parseFloat(((correct / quiz.questions.length) * 100).toFixed(2))
-    : 0;
+  const { score, total } = scoreAttempt(quiz.questions, answers);
 
   return (prisma as any).quizAttempt.create({
     data: {
@@ -159,7 +154,7 @@ export const submitAttempt = async (
       studentId,
       answers,
       score,
-      totalMarks: quiz.questions.length,
+      totalMarks: total,
     },
   });
 };

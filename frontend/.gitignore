@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# env
+.env
+.env*.local
+
+# debug / scratch
+*.log
+build*.txt
+lint*.txt
+lint*.json
