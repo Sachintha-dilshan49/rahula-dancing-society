@@ -66,10 +66,18 @@ export default function Footer() {
 
             {/* SOCIALS */}
             <div className="flex gap-4 pt-4">
-              {[Facebook, Instagram, Youtube].map((Icon, i) => (
+              <a
+                href="https://www.facebook.com/profile.php?id=100087623743804"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-[var(--rahula-gold)] hover:text-[var(--rahula-blue)] transition"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              {[Instagram, Youtube].map((Icon, i) => (
                 <div
                   key={i}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-[var(--rahula-gold)] hover:text-[var(--rahula-blue)] transition cursor-pointer"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 opacity-40 cursor-not-allowed"
                 >
                   <Icon className="w-4 h-4" />
                 </div>

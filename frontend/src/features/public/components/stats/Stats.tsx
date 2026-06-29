@@ -4,6 +4,8 @@ import Container from "@/shared/ui/Container";
 import { Trophy, Users, Calendar, Award } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const API_URL = "http://localhost:5000/api";
+
 function Counter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
 
@@ -28,12 +30,28 @@ function Counter({ target }: { target: number }) {
   return <span>{count}+</span>;
 }
 
+interface StatsData {
+  students: number;
+  achievements: number;
+  performances: number;
+  yearsOfExcellence: number;
+}
+
 export default function Stats() {
+  const [data, setData] = useState<StatsData | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/stats`)
+      .then((r) => r.json())
+      .then(setData)
+      .catch(() => {});
+  }, []);
+
   const stats = [
-    { icon: Trophy, value: 50, label: "Awards Won" },
-    { icon: Users, value: 120, label: "Active Members" },
-    { icon: Calendar, value: 25, label: "Years of Excellence" },
-    { icon: Award, value: 200, label: "Performances" },
+    { icon: Trophy, value: data?.achievements ?? 0, label: "Awards Won" },
+    { icon: Users, value: data?.students ?? 0, label: "Active Members" },
+    { icon: Calendar, value: data?.yearsOfExcellence ?? 0, label: "Years of Excellence" },
+    { icon: Award, value: data?.performances ?? 0, label: "Performances" },
   ];
 
   return (
@@ -45,7 +63,7 @@ export default function Stats() {
             return (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 text-center shadow-sm 
+                className="bg-white rounded-2xl p-8 text-center shadow-sm
                 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
               >
                 <div className="flex justify-center mb-6">
@@ -58,9 +76,7 @@ export default function Stats() {
                   <Counter target={stat.value} />
                 </h3>
 
-                <p className="text-gray-600 text-sm">
-                  {stat.label}
-                </p>
+                <p className="text-gray-600 text-sm">{stat.label}</p>
               </div>
             );
           })}

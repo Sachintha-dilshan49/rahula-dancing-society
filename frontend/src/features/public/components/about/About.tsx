@@ -53,13 +53,13 @@ export default function About() {
             <div className="relative group">
               <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
                 <Image
-                  src="/images/about/dance.jpg"
-                  alt="Rahula Dance"
+                  src="/images/about/rahula-performance.png"
+                  alt="Rahula College Dancing Society performance"
                   fill
                   className="
-                    object-cover 
-                    group-hover:scale-105 
-                    transition-transform 
+                    object-cover
+                    group-hover:scale-105
+                    transition-transform
                     duration-500
                   "
                 />
